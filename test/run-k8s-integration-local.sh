@@ -53,6 +53,16 @@ make -C "${PKGDIR}" test-k8s-integration
 #--storageclass-files=sc-standard.yaml,sc-balanced.yaml,sc-ssd.yaml --snapshotclass-file=pd-volumesnapshotclass.yaml --do-driver-build=true \
 #--gce-zone="us-central1-b" --num-nodes=${NUM_NODES:-3}
 
+# This version of the command builds and deploys the GCE PD CSI driver.
+# Points to a local K8s repository to get the e2e test binary, does not bring up
+# or tear down the kubernetes cluster. In addition, it runs External Storage
+# snapshot tests for the PD CSI driver using disk image snapshots.
+#${PKGDIR}/bin/k8s-integration-test --run-in-prow=false \
+#--staging-image=${GCE_PD_CSI_STAGING_IMAGE} --service-account-file=${GCE_PD_SA_DIR}/cloud-sa.json \
+#--deploy-overlay-name=prow-gke-release-staging-head --bringup-cluster=false --teardown-cluster=false --test-focus="External.*Storage.*snapshot" --local-k8s-dir=$KTOP \
+#--storageclass-files=sc-standard.yaml,sc-balanced.yaml,sc-ssd.yaml --snapshotclass-file=image-volumesnapshotclass.yaml --do-driver-build=true \
+#--gce-zone="us-central1-b" --num-nodes=${NUM_NODES:-3}
+
 # This version of the command brings up (and subsequently tears down) a GKE
 # cluster with managed GCE PersistentDisk CSI driver add-on enabled, and points to
 # the local K8s repository to get the e2e test binary.
