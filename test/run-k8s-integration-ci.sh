@@ -101,10 +101,12 @@ if [ -n "$gke_node_version" ]; then
   base_cmd="${base_cmd} --gke-node-version=${gke_node_version}"
 fi
 
-if [ "$test_disk_image_snapshot" = true ]; then
-  base_cmd="${base_cmd} --snapshotclass-files=pd-volumesnapshotclass.yaml,image-volumesnapshotclass.yaml"
-else
-  base_cmd="${base_cmd} --snapshotclass-files=pd-volumesnapshotclass.yaml"
-fi
+# if [ "$test_disk_image_snapshot" = true ]; then
+#   base_cmd="${base_cmd} --snapshotclass-files=pd-volumesnapshotclass.yaml,image-volumesnapshotclass.yaml"
+# else
+#   base_cmd="${base_cmd} --snapshotclass-files=pd-volumesnapshotclass.yaml"
+# fi
+
+base_cmd="${base_cmd} --snapshotclass-files=image-volumesnapshotclass.yaml --test-focus="External.*Storage.*snapshot"
 
 eval "$base_cmd"
