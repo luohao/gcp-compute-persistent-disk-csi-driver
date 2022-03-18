@@ -900,7 +900,7 @@ var _ = Describe("GCE PD CSI Driver", func() {
 		Expect(err).To(BeNil(), "Could not get snapshot from cloud directly")
 		Expect(snapshot.Name).To(Equal(snapshotName))
 
-		err = wait.Poll(10*time.Second, 3*time.Minute, func() (bool, error) {
+		err = wait.Poll(10*time.Second, 5*time.Minute, func() (bool, error) {
 			snapshot, err := computeService.Images.Get(p, snapshotName).Do()
 			Expect(err).To(BeNil(), "Could not get snapshot from cloud directly")
 			if snapshot.Status == "READY" {

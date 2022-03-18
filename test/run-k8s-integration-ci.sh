@@ -102,9 +102,9 @@ if [ -n "$gke_node_version" ]; then
 fi
 
 if [ "$test_disk_image_snapshot" = true ]; then
-  base_cmd="${base_cmd} --snapshotclass-file=pd-volumesnapshotclass.yaml"
+  base_cmd="${base_cmd} --snapshotclass-files=pd-volumesnapshotclass.yaml,image-volumesnapshotclass.yaml"
 else
-  base_cmd="${base_cmd} --snapshotclass-file=image-volumesnapshotclass.yaml"
+  base_cmd="${base_cmd} --snapshotclass-files=pd-volumesnapshotclass.yaml"
 fi
 
 eval "$base_cmd"
