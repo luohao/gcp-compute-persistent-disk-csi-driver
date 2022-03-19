@@ -33,7 +33,8 @@ readonly test_disk_image_snapshot=${TEST_DISK_IMAGE_SNAPSHOT:-false}
 
 readonly GCE_PD_TEST_FOCUS="PersistentVolumes\sGCEPD|[V|v]olume\sexpand|\[sig-storage\]\sIn-tree\sVolumes\s\[Driver:\sgcepd\]|allowedTopologies|Pod\sDisks|PersistentVolumes\sDefault"
 
-storage_classes=sc-balanced.yaml,sc-ssd.yaml
+#storage_classes=sc-balanced.yaml,sc-ssd.yaml
+storage_classes=sc-ssd.yaml
 
 if [[ $test_pd_labels = true ]] ; then
   storage_classes=${storage_classes},sc-standard.yaml
