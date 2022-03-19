@@ -917,6 +917,10 @@ var _ = Describe("GCE PD CSI Driver", func() {
 		Expect(err).To(BeNil(), "Failed to parse snapshot ID")
 		Expect(snapshotType).To(Equal(common.DiskImageType), "Expected images type in snapshot ID")
 
+		cloneName := "clone-" + testNamePrefix + string(uuid.NewUUID())
+		_, err = client.CreateVolumeFromSource(cloneName, nil, defaultSizeGb, snapshotID, "")
+		Expect(err).To(BeNil(), "CreateVolumeFromSource failed with error: %v", err)
+
 		defer func() {
 			// Delete Disk
 			err := client.DeleteVolume(volID)

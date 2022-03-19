@@ -119,6 +119,43 @@ func (c *CsiClient) CreateVolumeWithCaps(volName string, params map[string]strin
 	return cresp.GetVolume().GetVolumeId(), nil
 }
 
+func (c *CsiClient) CreateVolumeFromSource(volName string, params map[string]string, sizeInGb int64, snapshotID string, sourceVolumeID string) (string, error) {
+	capRange := &csipb.CapacityRange{
+		RequiredBytes: common.GbToBytes(sizeInGb),
+	}
+
+	req := &csipb.CreateVolumeRequest{
+		Name:               volName,
+		VolumeCapabilities: stdVolCaps,
+		Parameters:         params,
+		CapacityRange:      capRange,
+	}
+
+	if snapshotID != "" {
+		req.VolumeContentSource = &csipb.VolumeContentSource{
+			Type: &csipb.VolumeContentSource_Snapshot{
+				Snapshot: &csipb.VolumeContentSource_SnapshotSource{
+					SnapshotId: snapshotID,
+				},
+			},
+		}
+	}
+	if sourceVolumeID != "" {
+		req.VolumeContentSource = &csipb.VolumeContentSource{
+			Type: &csipb.VolumeContentSource_Volume{
+				Volume: &csipb.VolumeContentSource_VolumeSource{
+					VolumeId: sourceVolumeID,
+				},
+			},
+		}
+	}
+	resp, err := c.ctrlClient.CreateVolume(context.Background(), req)
+	if err != nil {
+		return "", err
+	}
+	return resp.GetVolume().GetVolumeId(), nil
+}
+
 func (c *CsiClient) CreateVolume(volName string, params map[string]string, sizeInGb int64, topReq *csipb.TopologyRequirement) (string, error) {
 	return c.CreateVolumeWithCaps(volName, params, sizeInGb, topReq, stdVolCaps)
 }
