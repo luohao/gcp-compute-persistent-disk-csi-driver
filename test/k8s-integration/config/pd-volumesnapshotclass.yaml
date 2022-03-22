@@ -4,3 +4,6 @@ metadata:
   name: csi-gce-pd-snapshot-class
 driver: pd.csi.storage.gke.io
 deletionPolicy: Delete
+parameters:
+  snapshot-type: images
+  image-family: integration-test
