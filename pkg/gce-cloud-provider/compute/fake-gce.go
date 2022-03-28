@@ -200,12 +200,26 @@ func (cloud *FakeCloudProvider) InsertDisk(ctx context.Context, project string, 
 		SizeGb:           common.BytesToGbRoundUp(capBytes),
 		Description:      "Disk created by GCE-PD CSI Driver",
 		Type:             cloud.GetDiskTypeURI(project, volKey, params.DiskType),
-		SourceSnapshotId: snapshotID,
 		SourceDiskId:     volumeContentSourceVolumeID,
-		SourceImageId:    snapshotID,
 		Status:           cloud.mockDiskStatus,
 		Labels:           params.Labels,
 	}
+
+	if snapshotID != "" {
+		_, snapshotType, _, err := common.SnapshotIDToProjectKey(snapshotID)
+		if err != nil {
+			return err
+		}
+		switch snapshotType {
+		case common.DiskSnapshotType:
+			computeDisk.SourceSnapshot = snapshotID
+		case common.DiskImageType:
+			computeDisk.SourceImage = snapshotID
+		default:
+			return fmt.Errorf("invalid snapshot type in snapshot ID: %s", snapshotType)
+		}
+	}
+
 	if params.DiskEncryptionKMSKey != "" {
 		computeDisk.DiskEncryptionKey = &computev1.CustomerEncryptionKey{
 			KmsKeyName: params.DiskEncryptionKMSKey,
